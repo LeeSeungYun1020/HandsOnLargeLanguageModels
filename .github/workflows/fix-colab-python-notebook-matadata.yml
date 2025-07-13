@@ -34,6 +34,7 @@ jobs:
           git config user.name "Colab Upload Bot"
           git config user.email "colab-upload-bot@users.noreply.github.com"
           git add .
-          git diff --cached --quiet || git commit -m "Modify metadata of python notebook file uploaded from colab"
+          FILES=$(git diff --cached --name-only -- '*.ipynb' | xargs -n1 basename | xargs)
+          git diff --cached --quiet || git commit -m "Modify python notebook metadata in $FILES"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push || echo "Push Failed"

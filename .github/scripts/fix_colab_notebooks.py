@@ -3,7 +3,7 @@ import os
 import nbformat
 
 
-def fix_widget_metadata(nb):
+def fix_widgets_metadata(nb):
   changed = False
   metadata = nb.get('metadata', {})
   if 'colab' not in metadata:
@@ -18,6 +18,13 @@ def fix_widget_metadata(nb):
       changed = True
   return changed
 
+def remove_widgets_metadata(nb):
+  metadata = nb.get('metadata', {})
+  if 'widgets' in metadata:
+    del metadata['widgets']
+    return True
+  return False
+
 
 def main():
   print("Start")
@@ -28,7 +35,7 @@ def main():
         path = os.path.join(root, file)
         with open(path, encoding='utf-8') as notebook_file:
           nb = nbformat.read(notebook_file, as_version=4)
-        if fix_widget_metadata(nb):
+        if remove_widgets_metadata(nb): #fix_widgets_metadata(nb):
           with open(path, 'w', encoding='utf-8') as notebook_file:
             nbformat.write(nb, notebook_file)
           fixed_files.append(file)

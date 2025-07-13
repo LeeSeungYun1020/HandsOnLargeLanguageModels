@@ -1,0 +1,38 @@
+name: Fix Colab Python Notebook Metadata
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: '**.ipynb'
+  pull_request:
+    branches: [ "main" ]
+    paths: '**.ipynb'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  find-and-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependency
+        run: pip install nbformat
+
+      - name: Fix
+        run: python .github/scripts/fix_colab_notebooks.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "Colab Upload Bot"
+          git config user.email "colab-upload-bot@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Modify metadata of python notebook file uploaded from colab"
+          git push || echo "All files are fine."

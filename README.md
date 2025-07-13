@@ -1,1 +1,5 @@
-# HandsOnLargeLanguageModels
+# 핸즈온 LLM
+
+무작정 LLM 공부해보기 프로젝트
+
+1. 대규모 언어 모델
